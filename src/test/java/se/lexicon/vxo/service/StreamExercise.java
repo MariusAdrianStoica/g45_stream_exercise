@@ -94,6 +94,10 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        dates =people.stream()
+                .map(Person::getDateOfBirth)
+                .collect(Collectors.toSet());
+
         assertNotNull(dates);
         assertTrue(dates instanceof TreeSet);
         assertEquals(expectedSize, dates.size());
