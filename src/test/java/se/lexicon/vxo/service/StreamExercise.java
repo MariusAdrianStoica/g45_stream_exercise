@@ -10,6 +10,7 @@ import java.time.Period;
 import java.util.*;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -113,6 +114,13 @@ public class StreamExercise {
         Person[] result = null;
 
         //todo: Write code here
+
+        result=people.stream()
+        .filter(person -> person.getFirstName().equalsIgnoreCase("Erik"))
+        .toArray(Person[]::new);
+
+        /*for(Person person : result)
+        System.out.println(person); */
 
         assertNotNull(result);
         assertEquals(expectedLength, result.length);
