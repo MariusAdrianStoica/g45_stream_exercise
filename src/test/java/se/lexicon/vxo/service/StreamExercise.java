@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -74,7 +75,11 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        females = people.stream()
+         .filter(person -> person.getGender().equals(Gender.FEMALE))
+                .collect(Collectors.toList());
 
+        //System.out.println(females.size());
         assertNotNull(females);
         assertEquals(expectedSize, females.size());
     }
