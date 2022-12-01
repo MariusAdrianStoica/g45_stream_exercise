@@ -43,6 +43,7 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        amount = people.stream().count();
         assertEquals(10000, amount);
     }
 
