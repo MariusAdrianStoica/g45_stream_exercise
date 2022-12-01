@@ -31,7 +31,7 @@ public class StreamExercise {
         List<Integer> integers = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
 
         //todo: Write code here
-
+        System.out.println(integers.stream().count());
     }
 
     /**
