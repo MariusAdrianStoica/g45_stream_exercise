@@ -57,6 +57,10 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        amount=people.stream() //source
+                .filter(p -> p.getLastName().equalsIgnoreCase("Andersson")) //intermediate op
+                .count(); //terminal operation
+
         assertEquals(expected, amount);
     }
 
