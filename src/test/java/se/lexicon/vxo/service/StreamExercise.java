@@ -119,9 +119,6 @@ public class StreamExercise {
         .filter(person -> person.getFirstName().equalsIgnoreCase("Erik"))
         .toArray(Person[]::new);
 
-        /*for(Person person : result)
-        System.out.println(person); */
-
         assertNotNull(result);
         assertEquals(expectedLength, result.length);
     }
@@ -136,6 +133,12 @@ public class StreamExercise {
         Optional<Person> optional = null;
 
         //todo: Write code here
+
+        optional = people.stream()
+                .filter(person -> person.getPersonId() == 5436)
+                .findFirst();
+
+        if (optional.isPresent()) System.out.println(optional.get());
 
         assertNotNull(optional);
         assertTrue(optional.isPresent());
@@ -153,6 +156,11 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        optional =people.stream()
+                        .min((o1, o2) -> o1.getDateOfBirth().compareTo(o2.getDateOfBirth()));
+
+        if (optional.isPresent()) System.out.println(optional.get());
+
         assertNotNull(optional);
         assertEquals(expectedBirthDate, optional.get().getDateOfBirth());
     }
@@ -168,6 +176,17 @@ public class StreamExercise {
         List<PersonDto> dtoList = null;
 
         //todo: Write code here
+        List<Person> before1920 =people.stream()
+                        .filter(person -> person.getDateOfBirth().isBefore(date))
+                        .collect(Collectors.toList());
+
+
+
+
+
+
+                /*filter(person -> person.getDateOfBirth().isBefore(date))
+                                .collect(Collectors.toList())*/
 
         assertNotNull(dtoList);
         assertEquals(expectedSize, dtoList.size());
