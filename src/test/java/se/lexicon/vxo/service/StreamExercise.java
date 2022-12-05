@@ -34,6 +34,9 @@ public class StreamExercise {
 
         //todo: Write code here
         System.out.println(integers.stream().count());
+        integers.forEach(System.out::println); //Method reference
+
+        integers.forEach(integer -> System.out.println(integer)); //Lambda
     }
 
     /**
@@ -77,7 +80,7 @@ public class StreamExercise {
         //todo: Write code here
 
         females = people.stream()
-         .filter(person -> person.getGender().equals(Gender.FEMALE))
+         .filter(person -> person.getGender().equals(Gender.FEMALE)) // ==Gender.FEMALE
                 .collect(Collectors.toList());
 
         //System.out.println(females.size());
@@ -97,7 +100,12 @@ public class StreamExercise {
 
         dates =people.stream()
                 .map(Person::getDateOfBirth)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(()->new TreeSet<>())); //Lambda
+
+        ////With method references
+        //    dates = people.stream()
+        //            .map(Person::getDateOfBirth)
+        //            .collect(Collectors.toCollection(TreeSet::new));
 
         assertNotNull(dates);
         assertTrue(dates instanceof TreeSet);
@@ -117,7 +125,12 @@ public class StreamExercise {
 
         result=people.stream()
         .filter(person -> person.getFirstName().equalsIgnoreCase("Erik"))
-        .toArray(Person[]::new);
+        .toArray(length -> new Person[length]); //lambda
+
+        //With method references
+        result = people.stream()
+                .filter(person -> person.getFirstName().equals("Erik"))
+                .toArray(Person[]::new);
 
         assertNotNull(result);
         assertEquals(expectedLength, result.length);
@@ -156,8 +169,25 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        //Using normal Comparator
+        /*
+            Comparator<Person> comparator = (p1, p2) -> p1.getDateOfBirth().compareTo(p2.getDateOfBirth());
+            optional = people.stream()
+                    .min(comparator);
+         */
+
+        //Using Comparator.comparing with normal lambda expression (Here we need to provide type for parameter person otherwise it passes in type Object)
+         /*
+            optional = people.stream()
+                .min(Comparator.comparing((Person person) -> person.getDateOfBirth()));
+         */
+        // MS
         optional =people.stream()
                         .min((o1, o2) -> o1.getDateOfBirth().compareTo(o2.getDateOfBirth()));
+
+        //Using method references
+        optional = people.stream()
+                .min(Comparator.comparing(Person::getDateOfBirth));
 
         if (optional.isPresent()) System.out.println(optional.get());
 
@@ -175,19 +205,29 @@ public class StreamExercise {
 
         List<PersonDto> dtoList = null;
 
-        //todo: Write code here
+        //todo: Write code here - how to copy data in PersonDto from before1920 list
+
         List<Person> before1920 =people.stream()
                         .filter(person -> person.getDateOfBirth().isBefore(date))
                         .collect(Collectors.toList());
 
+        dtoList = people.stream()
+                .filter(person -> person.getDateOfBirth().isBefore(LocalDate.parse("1920-01-01")))
+                .map(person -> new PersonDto(person.getPersonId(), person.getFirstName() + " " + person.getLastName()))
+                .collect(Collectors.toList());
 
 
+        System.out.println(before1920.size());
 
+        //dtoList=before1920.stream()
+          //      .flatMap(Person :: getPersonId )
+            //    .collect(Collectors.toList());
 
+        //for (int i =0; i< before1920.size(); i++){
+          // dtoList.add(new PersonDto(person.getPersonId(), (before1920.getFirstName())));
+        //}
 
-                /*filter(person -> person.getDateOfBirth().isBefore(date))
-                                .collect(Collectors.toList())*/
-
+        System.out.println(dtoList.size());
         assertNotNull(dtoList);
         assertEquals(expectedSize, dtoList.size());
     }
