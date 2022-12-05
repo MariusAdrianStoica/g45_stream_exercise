@@ -7,7 +7,9 @@ import se.lexicon.vxo.model.PersonDto;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.Year;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -244,6 +246,11 @@ public class StreamExercise {
         Optional<String> optional = null;
 
         //todo: Write code here
+        optional =people.stream()
+                .filter(person -> person.getPersonId() ==5914) //find Person after ID
+                .map(Person::getDateOfBirth)    //get the birthdate of that Person
+                .map(date -> date.getDayOfWeek()+" "+date.getDayOfMonth()+" "+date.getMonth()+" "+date.getYear())
+                        .findFirst();
 
         assertNotNull(optional);
         assertTrue(optional.isPresent());
@@ -263,6 +270,10 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        averageAge=people.stream()
+                        .mapToInt(personToAge)
+                                .average().orElse(0); //why orElse(0)?
+
         assertTrue(averageAge > 0);
         assertEquals(expected, averageAge, .01);
     }
@@ -278,6 +289,16 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        //'Weak' palindrome checker that can handle single words only ignoring case, good enough for this task
+        Predicate<String> palindrome = name -> name.equalsIgnoreCase(new StringBuilder(name).reverse().toString());
+
+        result=people.stream()
+                .map(Person::getFirstName)
+                .distinct()
+                .filter(palindrome)
+                .sorted()
+                .toArray(String[] ::new);
+
         assertNotNull(result);
         assertArrayEquals(expected, result);
     }
@@ -292,6 +313,16 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        //With normal lambda expression:
+        /*
+            personMap = people.stream()
+                    .collect(Collectors.groupingBy(person -> person.getLastName()));
+         */
+
+        //MR
+        personMap = people.stream()
+                .collect(Collectors.groupingBy(Person::getLastName));
+
         assertNotNull(personMap);
         assertEquals(expectedSize, personMap.size());
     }
@@ -305,8 +336,11 @@ public class StreamExercise {
 
         //todo: Write code here
 
+        _2020_dates = Stream.iterate(LocalDate.parse("2020-01-01"), date -> date.plusDays(1))
+                .limit(Year.of(2020).isLeap() ? 366 : 365)
+                .toArray(LocalDate[]::new);
 
-        assertNotNull(_2020_dates);
+                assertNotNull(_2020_dates);
         assertEquals(366, _2020_dates.length);
         assertEquals(LocalDate.parse("2020-01-01"), _2020_dates[0]);
         assertEquals(LocalDate.parse("2020-12-31"), _2020_dates[_2020_dates.length-1]);
